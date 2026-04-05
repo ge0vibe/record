@@ -1,0 +1,36 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Record {
+  id             Int      @id @default(autoincrement())
+  artist         String
+  album          String
+  year           Int?
+  genre          String?
+  artworkUrl     String?
+  starRating     Int      @default(3)
+  favouriteTrack String?
+  cost           Float?
+  notes          String?
+  createdAt      DateTime @default(now())
+}
+
+model WishlistItem {
+  id             Int      @id @default(autoincrement())
+  artist         String
+  album          String
+  year           Int?
+  genre          String?
+  artworkUrl     String?
+  starRating     Int      @default(3)
+  favouriteTrack String?
+  targetPrice    Float?
+  notes          String?
+  createdAt      DateTime @default(now())
+}

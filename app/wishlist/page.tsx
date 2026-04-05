@@ -49,59 +49,61 @@ export default function WishlistPage() {
   );
 
   return (
-    <div>
-      {/* Header */}
-      <div className="flex items-start justify-between mb-6">
+    <div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-4.5rem)] flex flex-col">
+      {/* Fixed header */}
+      <div className="shrink-0 pb-4">
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h1 className="text-3xl font-bold text-[#ededed]">Wishlist</h1>
+            <div className="flex flex-wrap gap-2 mt-3">
+              <span className="bg-[#1f1f1f] rounded-full px-3 py-1 text-xs">
+                <span className="text-[#888888]">Items </span>
+                <span className="text-[#ededed] font-medium">{items.length}</span>
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 mt-1">
+            <div className="flex border border-[#1f1f1f] rounded-lg overflow-hidden">
+              <button
+                onClick={() => setView("grid")}
+                title="Grid view"
+                className={`px-3 py-2 transition-colors ${
+                  view === "grid" ? "bg-[#1f1f1f] text-[#ededed]" : "bg-transparent text-[#888888] hover:text-[#ededed]"
+                }`}
+              >
+                <GridIcon />
+              </button>
+              <button
+                onClick={() => setView("list")}
+                title="List view"
+                className={`px-3 py-2 transition-colors ${
+                  view === "list" ? "bg-[#1f1f1f] text-[#ededed]" : "bg-transparent text-[#888888] hover:text-[#ededed]"
+                }`}
+              >
+                <ListIcon />
+              </button>
+            </div>
+            <Link
+              href="/add-wishlist"
+              className="bg-[#a855f7] hover:bg-[#9333ea] text-white font-medium px-4 py-2 rounded-lg transition-colors text-sm"
+            >
+              + Add
+            </Link>
+          </div>
+        </div>
         <div>
-          <h1 className="text-3xl font-bold text-[#ededed]">Wishlist</h1>
-          <div className="flex flex-wrap gap-2 mt-3">
-            <span className="bg-[#1f1f1f] rounded-full px-3 py-1 text-xs">
-              <span className="text-[#888888]">Items </span>
-              <span className="text-[#ededed] font-medium">{items.length}</span>
-            </span>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 mt-1">
-          <div className="flex border border-[#1f1f1f] rounded-lg overflow-hidden">
-            <button
-              onClick={() => setView("grid")}
-              title="Grid view"
-              className={`px-3 py-2 transition-colors ${
-                view === "grid" ? "bg-[#1f1f1f] text-[#ededed]" : "bg-transparent text-[#888888] hover:text-[#ededed]"
-              }`}
-            >
-              <GridIcon />
-            </button>
-            <button
-              onClick={() => setView("list")}
-              title="List view"
-              className={`px-3 py-2 transition-colors ${
-                view === "list" ? "bg-[#1f1f1f] text-[#ededed]" : "bg-transparent text-[#888888] hover:text-[#ededed]"
-              }`}
-            >
-              <ListIcon />
-            </button>
-          </div>
-          <Link
-            href="/add-wishlist"
-            className="bg-[#a855f7] hover:bg-[#9333ea] text-white font-medium px-4 py-2 rounded-lg transition-colors text-sm"
-          >
-            + Add
-          </Link>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search artist or album..."
+            className="w-full max-w-sm bg-[#111111] border border-[#1f1f1f] rounded-lg px-4 py-2 text-[#ededed] placeholder-[#555] focus:outline-none focus:border-[#a855f7] transition-colors text-sm"
+          />
         </div>
       </div>
 
-      {/* Search */}
-      <div className="mb-6">
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search artist or album..."
-          className="w-full max-w-sm bg-[#111111] border border-[#1f1f1f] rounded-lg px-4 py-2 text-[#ededed] placeholder-[#555] focus:outline-none focus:border-[#a855f7] transition-colors text-sm"
-        />
-      </div>
-
+      {/* Scrollable content */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
       {/* Loading */}
       {loading ? (
         view === "grid" ? (
@@ -198,6 +200,7 @@ export default function WishlistPage() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

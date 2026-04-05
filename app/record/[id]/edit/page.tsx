@@ -8,11 +8,11 @@ export default async function EditRecordPage({ params }: { params: { id: string 
   if (!record) notFound();
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <Link href={`/record/${record.id}`} className="text-zinc-400 hover:text-white text-sm transition-colors mb-6 inline-block">
+    <div className="max-w-3xl">
+      <Link href={`/record/${record.id}`} className="text-[#888888] hover:text-[#ededed] text-sm transition-colors mb-6 inline-block">
         ← Back
       </Link>
-      <h1 className="text-3xl font-bold text-white mb-8">Edit Record</h1>
+      <h1 className="text-3xl font-bold text-[#ededed] mb-5">Edit Record</h1>
       <RecordForm
         mode="record"
         recordId={record.id}

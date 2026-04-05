@@ -55,7 +55,6 @@ export default function ReleasesPage() {
   const [watched, setWatched] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<"all" | "watching">("all");
 
-  // Load watched releases once on mount
   useEffect(() => {
     fetch("/api/watched-releases")
       .then((r) => r.json())
@@ -87,7 +86,6 @@ export default function ReleasesPage() {
 
   async function toggleWatch(release: Release) {
     const isWatched = watched.has(release.id);
-    // Optimistic update
     setWatched((prev) => {
       const next = new Set(prev);
       if (isWatched) next.delete(release.id); else next.add(release.id);
@@ -99,52 +97,43 @@ export default function ReleasesPage() {
       await fetch("/api/watched-releases", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          mbid: release.id,
-          artist: release.artist,
-          album: release.album,
-          releaseDate: release.date,
-        }),
+        body: JSON.stringify({ mbid: release.id, artist: release.artist, album: release.album, releaseDate: release.date }),
       });
     }
   }
 
-  const displayed = filter === "watching"
-    ? releases.filter((r) => watched.has(r.id))
-    : releases;
+  const displayed = filter === "watching" ? releases.filter((r) => watched.has(r.id)) : releases;
 
-  // Group by date
   const grouped: Record<string, Release[]> = {};
   for (const r of displayed) {
     if (!grouped[r.date]) grouped[r.date] = [];
     grouped[r.date].push(r);
   }
   const dates = Object.keys(grouped).sort();
-
   const watchingCount = releases.filter((r) => watched.has(r.id)).length;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-white">Releases</h1>
-          <p className="text-zinc-400 mt-1">Upcoming album releases via MusicBrainz</p>
+          <h1 className="text-3xl font-bold text-[#ededed]">New Releases</h1>
+          <p className="text-[#888888] mt-1">Upcoming album releases via MusicBrainz</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 mt-1">
           <button
             onClick={prevMonth}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors text-lg"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-transparent border border-[#1f1f1f] hover:border-[#333333] text-[#888888] hover:text-[#ededed] transition-colors text-lg"
             aria-label="Previous month"
           >
             ‹
           </button>
-          <span className="text-white font-medium w-36 text-center">
+          <span className="text-[#ededed] font-medium w-36 text-center text-sm">
             {MONTH_NAMES[month - 1]} {year}
           </span>
           <button
             onClick={nextMonth}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors text-lg"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-transparent border border-[#1f1f1f] hover:border-[#333333] text-[#888888] hover:text-[#ededed] transition-colors text-lg"
             aria-label="Next month"
           >
             ›
@@ -153,11 +142,11 @@ export default function ReleasesPage() {
       </div>
 
       {/* Filter tabs */}
-      <div className="flex gap-1 mb-6 bg-zinc-900 border border-zinc-800 rounded-lg p-1 w-fit">
+      <div className="flex gap-1 mb-6 bg-[#111111] border border-[#1f1f1f] rounded-lg p-1 w-fit">
         <button
           onClick={() => setFilter("all")}
           className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-            filter === "all" ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-white"
+            filter === "all" ? "bg-[#1f1f1f] text-[#ededed]" : "text-[#888888] hover:text-[#ededed]"
           }`}
         >
           All
@@ -165,13 +154,15 @@ export default function ReleasesPage() {
         <button
           onClick={() => setFilter("watching")}
           className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 ${
-            filter === "watching" ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-white"
+            filter === "watching" ? "bg-[#1f1f1f] text-[#ededed]" : "text-[#888888] hover:text-[#ededed]"
           }`}
         >
           <StarIcon filled={filter === "watching"} />
           Watching
           {watchingCount > 0 && (
-            <span className={`text-xs rounded-full px-1.5 py-0.5 ${filter === "watching" ? "bg-red-600 text-white" : "bg-zinc-700 text-zinc-300"}`}>
+            <span className={`text-xs rounded-full px-1.5 py-0.5 ${
+              filter === "watching" ? "bg-[#a855f7]/20 text-[#a855f7]" : "bg-[#1f1f1f] text-[#888888]"
+            }`}>
               {watchingCount}
             </span>
           )}
@@ -182,27 +173,28 @@ export default function ReleasesPage() {
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-xl px-5 py-4 animate-pulse">
+            <div key={i} className="bg-[#111111] border border-[#1f1f1f] rounded-xl px-5 py-4 animate-pulse">
               <div className="flex gap-6">
-                <div className="h-4 bg-zinc-800 rounded w-16 shrink-0" />
-                <div className="h-4 bg-zinc-800 rounded w-40" />
-                <div className="h-4 bg-zinc-800 rounded w-32" />
+                <div className="h-4 bg-[#1a1a1a] rounded w-16 shrink-0" />
+                <div className="h-4 bg-[#1a1a1a] rounded w-40" />
+                <div className="h-4 bg-[#1a1a1a] rounded w-32" />
               </div>
             </div>
           ))}
         </div>
       ) : error ? (
-        <div className="text-center py-20">
-          <p className="text-zinc-400">Failed to load releases. Try again later.</p>
+        <div className="text-center py-24">
+          <p className="text-[#888888]">Failed to load releases. Try again later.</p>
         </div>
       ) : dates.length === 0 ? (
-        <div className="text-center py-20">
+        <div className="text-center py-24">
+          <div className="text-5xl mb-4 text-[#2a2a2a]">♪</div>
           {filter === "watching" ? (
-            <p className="text-zinc-400 text-lg">No watched releases for {MONTH_NAMES[month - 1]} {year}.</p>
+            <p className="text-[#888888] text-lg">No watched releases for {MONTH_NAMES[month - 1]} {year}.</p>
           ) : (
             <>
-              <p className="text-zinc-400 text-lg">No album releases found for {MONTH_NAMES[month - 1]} {year}.</p>
-              <p className="text-zinc-600 text-sm mt-2">MusicBrainz coverage of future releases may be limited.</p>
+              <p className="text-[#888888] text-lg">No releases found for {MONTH_NAMES[month - 1]} {year}.</p>
+              <p className="text-[#555] text-sm mt-2">MusicBrainz coverage of future releases may be limited.</p>
             </>
           )}
         </div>
@@ -210,32 +202,32 @@ export default function ReleasesPage() {
         <div className="space-y-6">
           {dates.map((date) => (
             <div key={date}>
-              <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-2 px-1">
+              <h2 className="text-[11px] font-semibold text-[#555] uppercase tracking-widest mb-2 px-1">
                 {MONTH_NAMES[month - 1]} {formatDay(date)}
               </h2>
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+              <div className="bg-[#111111] border border-[#1f1f1f] rounded-xl overflow-hidden">
                 {grouped[date].map((release, i) => {
                   const isWatched = watched.has(release.id);
                   return (
                     <div
                       key={release.id}
-                      className={`flex items-center gap-4 px-5 py-3.5 ${i !== 0 ? "border-t border-zinc-800" : ""}`}
+                      className={`flex items-center gap-4 px-5 py-3.5 ${i !== 0 ? "border-t border-[#1f1f1f]" : ""}`}
                     >
-                      <div className="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center text-zinc-600 shrink-0 text-xs">
+                      <div className="w-8 h-8 rounded-lg bg-[#1a1a1a] flex items-center justify-center text-[#333] shrink-0 text-xs">
                         ♪
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-white font-medium truncate">{release.album}</p>
-                        <p className="text-zinc-400 text-sm truncate">{release.artist}</p>
+                        <p className="text-[#ededed] font-medium truncate">{release.album}</p>
+                        <p className="text-[#888888] text-sm truncate">{release.artist}</p>
                       </div>
-                      <span className="text-zinc-600 text-xs shrink-0 hidden sm:block">{release.date}</span>
+                      <span className="text-[#555] text-xs shrink-0 hidden sm:block">{release.date}</span>
                       <button
                         onClick={() => toggleWatch(release)}
                         title={isWatched ? "Remove from watching" : "Add to watching"}
                         className={`shrink-0 p-1.5 rounded-lg transition-colors ${
                           isWatched
-                            ? "text-red-500 hover:text-red-400 hover:bg-zinc-800"
-                            : "text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800"
+                            ? "text-[#a855f7] hover:bg-[#a855f7]/10"
+                            : "text-[#555] hover:text-[#888888] hover:bg-[#1a1a1a]"
                         }`}
                       >
                         <StarIcon filled={isWatched} />
@@ -250,7 +242,7 @@ export default function ReleasesPage() {
       )}
 
       {!loading && !error && releases.length > 0 && (
-        <p className="text-zinc-600 text-xs text-center mt-8">
+        <p className="text-[#555] text-xs text-center mt-8">
           {releases.length} release{releases.length !== 1 ? "s" : ""} · Data from MusicBrainz
         </p>
       )}

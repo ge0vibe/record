@@ -15,7 +15,7 @@ export default function DeleteRecordButton({ id }: { id: number }) {
   return (
     <button
       onClick={handleDelete}
-      className="flex-1 bg-red-900 hover:bg-red-800 text-white font-medium py-2.5 rounded-lg transition-colors"
+      className="flex-1 bg-transparent border border-red-900/50 hover:border-red-700 hover:bg-red-950/30 text-red-400 font-medium py-2.5 rounded-lg transition-colors"
     >
       Delete
     </button>

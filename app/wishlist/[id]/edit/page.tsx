@@ -8,11 +8,11 @@ export default async function EditWishlistPage({ params }: { params: { id: strin
   if (!item) notFound();
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <Link href="/wishlist" className="text-zinc-400 hover:text-white text-sm transition-colors mb-6 inline-block">
+    <div className="max-w-3xl">
+      <Link href="/wishlist" className="text-[#888888] hover:text-[#ededed] text-sm transition-colors mb-6 inline-block">
         ← Back to Wishlist
       </Link>
-      <h1 className="text-3xl font-bold text-white mb-8">Edit Wishlist Item</h1>
+      <h1 className="text-3xl font-bold text-[#ededed] mb-5">Edit Wishlist Item</h1>
       <RecordForm
         mode="wishlist"
         recordId={item.id}

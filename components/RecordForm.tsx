@@ -12,6 +12,9 @@ interface RecordFormProps {
 
 const GENRES = ["Rock", "Pop", "Jazz", "Classical", "Hip-Hop", "Electronic", "R&B", "Country", "Folk", "Metal", "Punk", "Blues", "Soul", "Reggae", "Latin", "Other"];
 
+const inputClass = "w-full bg-[#111111] border border-[#1f1f1f] rounded-lg px-3 py-2 text-[#ededed] placeholder-[#555] focus:outline-none focus:border-[#a855f7] transition-colors";
+const labelClass = "block text-sm font-medium text-[#888888] mb-1";
+
 export default function RecordForm({ mode, initialData, recordId }: RecordFormProps) {
   const router = useRouter();
   const isEdit = !!recordId;
@@ -43,9 +46,10 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
     setLoading(true);
     setError("");
 
-    const endpoint = mode === "record"
-      ? isEdit ? `/api/records/${recordId}` : "/api/records"
-      : isEdit ? `/api/wishlist/${recordId}` : "/api/wishlist";
+    const endpoint =
+      mode === "record"
+        ? isEdit ? `/api/records/${recordId}` : "/api/records"
+        : isEdit ? `/api/wishlist/${recordId}` : "/api/wishlist";
 
     const method = isEdit ? "PUT" : "POST";
 
@@ -80,57 +84,57 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg text-sm">
+        <div className="bg-red-950/50 border border-red-800 text-red-400 px-4 py-2.5 rounded-lg text-sm">
           {error}
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Left column */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-1">Artist *</label>
+            <label className={labelClass}>Artist *</label>
             <input
               required
               value={form.artist}
               onChange={(e) => setForm((f) => ({ ...f, artist: e.target.value }))}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 transition-colors"
+              className={inputClass}
               placeholder="e.g. The Beatles"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-1">Album *</label>
+            <label className={labelClass}>Album *</label>
             <input
               required
               value={form.album}
               onChange={(e) => setForm((f) => ({ ...f, album: e.target.value }))}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 transition-colors"
+              className={inputClass}
               placeholder="e.g. Abbey Road"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-zinc-400 mb-1">Year</label>
+              <label className={labelClass}>Year</label>
               <input
                 type="number"
                 value={form.year}
                 onChange={(e) => setForm((f) => ({ ...f, year: e.target.value }))}
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 transition-colors"
+                className={inputClass}
                 placeholder="1969"
                 min="1900"
                 max={new Date().getFullYear()}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-zinc-400 mb-1">Genre</label>
+              <label className={labelClass}>Genre</label>
               <select
                 value={form.genre}
                 onChange={(e) => setForm((f) => ({ ...f, genre: e.target.value }))}
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 transition-colors"
+                className={inputClass}
               >
                 <option value="">Select...</option>
                 {GENRES.map((g) => (
@@ -141,19 +145,17 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-1">Favourite Track</label>
+            <label className={labelClass}>Favourite Track</label>
             <input
               value={form.favouriteTrack}
               onChange={(e) => setForm((f) => ({ ...f, favouriteTrack: e.target.value }))}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 transition-colors"
+              className={inputClass}
               placeholder="e.g. Come Together"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-1">
-              {mode === "record" ? "Cost (£)" : "Target Price (£)"}
-            </label>
+            <label className={labelClass}>{mode === "record" ? "Cost (£)" : "Target Price (£)"}</label>
             <input
               type="number"
               step="0.01"
@@ -165,14 +167,14 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
                     : { ...f, targetPrice: e.target.value }
                 )
               }
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 transition-colors"
+              className={inputClass}
               placeholder="0.00"
               min="0"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-2">Star Rating</label>
+            <label className={labelClass}>Star Rating</label>
             <StarRating
               value={form.starRating}
               onChange={(v) => setForm((f) => ({ ...f, starRating: v }))}
@@ -180,31 +182,31 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-1">Notes</label>
+            <label className={labelClass}>Notes</label>
             <textarea
               value={form.notes}
               onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
-              rows={3}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 transition-colors resize-none"
+              rows={2}
+              className={`${inputClass} resize-none`}
               placeholder="Any notes about this record..."
             />
           </div>
         </div>
 
         {/* Right column — artwork */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-1">Artwork URL</label>
+            <label className={labelClass}>Artwork URL</label>
             <input
               type="url"
               value={form.artworkUrl}
               onChange={(e) => handleArtworkUrlChange(e.target.value)}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 transition-colors"
+              className={inputClass}
               placeholder="https://..."
             />
           </div>
 
-          <div className="aspect-square bg-zinc-800 rounded-xl border border-zinc-700 overflow-hidden flex items-center justify-center">
+          <div className="aspect-square bg-[#111111] rounded-xl border border-[#1f1f1f] overflow-hidden flex items-center justify-center">
             {artworkPreview ? (
               <img
                 src={artworkPreview}
@@ -213,7 +215,7 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
                 onError={() => setArtworkPreview("")}
               />
             ) : (
-              <div className="text-center text-zinc-600">
+              <div className="text-center text-[#333333]">
                 <div className="text-6xl mb-2">♪</div>
                 <p className="text-sm">Artwork preview</p>
               </div>
@@ -226,14 +228,14 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
         <button
           type="submit"
           disabled={loading}
-          className="bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium px-6 py-2.5 rounded-lg transition-colors"
+          className="bg-[#a855f7] hover:bg-[#9333ea] disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium px-6 py-2.5 rounded-lg transition-colors"
         >
           {loading ? "Saving..." : isEdit ? "Save Changes" : mode === "record" ? "Add to Collection" : "Add to Wishlist"}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
-          className="bg-zinc-800 hover:bg-zinc-700 text-white font-medium px-6 py-2.5 rounded-lg transition-colors"
+          className="bg-transparent border border-[#1f1f1f] hover:border-[#333333] text-[#ededed] font-medium px-6 py-2.5 rounded-lg transition-colors"
         >
           Cancel
         </button>

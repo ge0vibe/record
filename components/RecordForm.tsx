@@ -74,6 +74,7 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
     const payload = {
       ...form,
       year: form.year ? Number(form.year) : null,
+      starRating: mode === "record" ? form.starRating : undefined,
       cost: mode === "record" && form.cost ? Number(form.cost) : undefined,
       targetPrice: mode === "wishlist" && form.targetPrice ? Number(form.targetPrice) : undefined,
     };
@@ -195,13 +196,15 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
             />
           </div>
 
-          <div>
-            <label className={labelClass}>Star Rating</label>
-            <StarRating
-              value={form.starRating}
-              onChange={(v) => setForm((f) => ({ ...f, starRating: v }))}
-            />
-          </div>
+          {mode === "record" && (
+            <div>
+              <label className={labelClass}>Star Rating</label>
+              <StarRating
+                value={form.starRating}
+                onChange={(v) => setForm((f) => ({ ...f, starRating: v }))}
+              />
+            </div>
+          )}
 
           <div>
             <label className={labelClass}>Notes</label>

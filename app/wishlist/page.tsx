@@ -7,6 +7,7 @@ import StarRating from "@/components/StarRating";
 import { WishlistItem } from "@/lib/types";
 
 type ViewMode = "grid" | "list";
+type SortMode = "newest" | "oldest" | "album" | "artist";
 
 function GridIcon() {
   return (
@@ -28,6 +29,7 @@ export default function WishlistPage() {
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<SortMode>("newest");
   const [view, setView] = useState<ViewMode>("grid");
 
   useEffect(() => {
@@ -41,12 +43,20 @@ export default function WishlistPage() {
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
 
-  const filtered = items.filter(
-    (i) =>
-      !search ||
-      i.artist.toLowerCase().includes(search.toLowerCase()) ||
-      i.album.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = items
+    .filter(
+      (i) =>
+        !search ||
+        i.artist.toLowerCase().includes(search.toLowerCase()) ||
+        i.album.toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sort === "newest") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (sort === "oldest") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      if (sort === "album") return a.album.localeCompare(b.album);
+      if (sort === "artist") return a.artist.localeCompare(b.artist);
+      return 0;
+    });
 
   return (
     <div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-4.5rem)] flex flex-col">
@@ -91,14 +101,24 @@ export default function WishlistPage() {
             </Link>
           </div>
         </div>
-        <div>
+        <div className="flex gap-3">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search artist or album..."
-            className="w-full max-w-sm bg-[#111111] border border-[#1f1f1f] rounded-lg px-4 py-2 text-[#ededed] placeholder-[#555] focus:outline-none focus:border-[#a855f7] transition-colors text-sm"
+            className="flex-1 bg-[#111111] border border-[#1f1f1f] rounded-lg px-4 py-2 text-[#ededed] placeholder-[#555] focus:outline-none focus:border-[#a855f7] transition-colors text-sm"
           />
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortMode)}
+            className="bg-[#111111] border border-[#1f1f1f] rounded-lg px-3 py-2 text-[#ededed] focus:outline-none focus:border-[#a855f7] transition-colors text-sm"
+          >
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="album">Album A–Z</option>
+            <option value="artist">Artist A–Z</option>
+          </select>
         </div>
       </div>
 

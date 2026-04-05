@@ -7,6 +7,7 @@ import StarRating from "@/components/StarRating";
 import { Record } from "@/lib/types";
 
 type ViewMode = "grid" | "list";
+type SortMode = "newest" | "oldest" | "album" | "artist";
 
 function GridIcon() {
   return (
@@ -29,6 +30,7 @@ export default function CollectionPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [genreFilter, setGenreFilter] = useState("");
+  const [sort, setSort] = useState<SortMode>("newest");
   const [view, setView] = useState<ViewMode>("grid");
 
   useEffect(() => {
@@ -39,14 +41,22 @@ export default function CollectionPage() {
 
   const genres = Array.from(new Set(records.map((r) => r.genre).filter(Boolean))) as string[];
 
-  const filtered = records.filter((r) => {
-    const matchSearch =
-      !search ||
-      r.artist.toLowerCase().includes(search.toLowerCase()) ||
-      r.album.toLowerCase().includes(search.toLowerCase());
-    const matchGenre = !genreFilter || r.genre === genreFilter;
-    return matchSearch && matchGenre;
-  });
+  const filtered = records
+    .filter((r) => {
+      const matchSearch =
+        !search ||
+        r.artist.toLowerCase().includes(search.toLowerCase()) ||
+        r.album.toLowerCase().includes(search.toLowerCase());
+      const matchGenre = !genreFilter || r.genre === genreFilter;
+      return matchSearch && matchGenre;
+    })
+    .sort((a, b) => {
+      if (sort === "newest") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (sort === "oldest") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      if (sort === "album") return a.album.localeCompare(b.album);
+      if (sort === "artist") return a.artist.localeCompare(b.artist);
+      return 0;
+    });
 
   const totalSpent = records.reduce((sum, r) => sum + (r.cost ?? 0), 0);
   const avgRating = records.length > 0
@@ -120,6 +130,16 @@ export default function CollectionPage() {
               ))}
             </select>
           )}
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortMode)}
+            className="bg-[#111111] border border-[#1f1f1f] rounded-lg px-3 py-2 text-[#ededed] focus:outline-none focus:border-[#a855f7] transition-colors text-sm"
+          >
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="album">Album A–Z</option>
+            <option value="artist">Artist A–Z</option>
+          </select>
         </div>
       </div>
 

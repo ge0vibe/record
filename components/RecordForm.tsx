@@ -11,7 +11,7 @@ interface RecordFormProps {
   recordId?: number;
 }
 
-const GENRES = ["Rock", "Pop", "Jazz", "Classical", "Hip-Hop", "Electronic", "R&B", "Country", "Folk", "Metal", "Punk", "Blues", "Soul", "Reggae", "Latin", "Other"];
+const GENRES = ["Rock", "Pop", "Jazz", "Classical", "Hip-Hop", "Rap", "Grime", "Electronic", "Dance", "R&B", "Soul", "Indie", "Country", "Folk", "Metal", "Punk", "Blues", "Reggae", "Latin", "Other"];
 
 const inputClass = "w-full bg-[#111111] border border-[#1f1f1f] rounded-lg px-3 py-2 text-[#ededed] placeholder-[#555] focus:outline-none focus:border-[#a855f7] transition-colors";
 const labelClass = "block text-sm font-medium text-[#888888] mb-1";

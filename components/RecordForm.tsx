@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import StarRating from "./StarRating";
+import DiscogsSearch, { AutofillFields } from "./DiscogsSearch";
 
 interface RecordFormProps {
   mode: "record" | "wishlist";
@@ -35,10 +36,27 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
   const [artworkPreview, setArtworkPreview] = useState((initialData?.artworkUrl as string) || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const fieldsRef = useRef<HTMLDivElement>(null);
 
   const handleArtworkUrlChange = (url: string) => {
     setForm((f) => ({ ...f, artworkUrl: url }));
     setArtworkPreview(url);
+  };
+
+  const handleAutofill = (fields: AutofillFields) => {
+    setForm((f) => ({
+      ...f,
+      artist: fields.artist || f.artist,
+      album: fields.album || f.album,
+      year: fields.year || f.year,
+      genre: fields.genre || f.genre,
+      artworkUrl: fields.artworkUrl || f.artworkUrl,
+    }));
+    if (fields.artworkUrl) setArtworkPreview(fields.artworkUrl);
+  };
+
+  const handleScrollToFields = () => {
+    fieldsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -91,7 +109,11 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {!isEdit && (
+        <DiscogsSearch onAutofill={handleAutofill} onScrollToFields={handleScrollToFields} />
+      )}
+
+      <div ref={fieldsRef} className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Left column */}
         <div className="space-y-3">
           <div>

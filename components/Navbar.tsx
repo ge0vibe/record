@@ -17,6 +17,9 @@ export default function Navbar() {
           <Link href="/spending" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
             Spending
           </Link>
+          <Link href="/releases" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
+            Releases
+          </Link>
           <Link
             href="/add-record"
             className="bg-red-600 hover:bg-red-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"

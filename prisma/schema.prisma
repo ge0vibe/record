@@ -21,6 +21,15 @@ model Record {
   createdAt      DateTime @default(now())
 }
 
+model WatchedRelease {
+  id          Int      @id @default(autoincrement())
+  mbid        String   @unique
+  artist      String
+  album       String
+  releaseDate String
+  createdAt   DateTime @default(now())
+}
+
 model WishlistItem {
   id             Int      @id @default(autoincrement())
   artist         String

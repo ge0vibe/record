@@ -221,7 +221,18 @@ export default function CollectionPage() {
                     {record.genre}
                   </span>
                 )}
-                <div className="hidden sm:block shrink-0">
+                <div className="hidden sm:flex sm:items-center sm:gap-3 shrink-0">
+                  {(() => {
+                    const favCount = record.tracks?.filter((t) => t.isFavourite).length ?? 0;
+                    return favCount > 0 ? (
+                      <span className="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#f97316" style={{ filter: "drop-shadow(0 0 4px rgba(249,115,22,0.5))" }}>
+                          <path d="M12 2c-2.5 5.5-5 8-5 11a5 5 0 0010 0c0-3-2.5-5.5-5-11zm0 14.5A2.5 2.5 0 019.5 14c0-1.3.8-2.5 2.5-4.5 1.7 2 2.5 3.2 2.5 4.5A2.5 2.5 0 0112 16.5z" />
+                        </svg>
+                        <span className="text-[11px] text-[#f97316]">{favCount}</span>
+                      </span>
+                    ) : null;
+                  })()}
                   <StarRating value={record.starRating} readonly size="sm" />
                 </div>
                 {record.cost != null && (

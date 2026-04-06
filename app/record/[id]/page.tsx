@@ -2,10 +2,14 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import StarRating from "@/components/StarRating";
+import Tracklist from "@/components/Tracklist";
 import DeleteRecordButton from "./DeleteRecordButton";
 
 export default async function RecordDetailPage({ params }: { params: { id: string } }) {
-  const record = await prisma.record.findUnique({ where: { id: Number(params.id) } });
+  const record = await prisma.record.findUnique({
+    where: { id: Number(params.id) },
+    include: { tracks: { orderBy: { order: "asc" } } },
+  });
   if (!record) notFound();
 
   return (
@@ -53,12 +57,6 @@ export default async function RecordDetailPage({ params }: { params: { id: strin
                   </span>
                 </div>
               )}
-              {record.favouriteTrack && (
-                <div className="col-span-2">
-                  <p className="text-[11px] text-[#555] uppercase tracking-wider mb-1">Favourite Track</p>
-                  <p className="text-[#ededed]">♪ {record.favouriteTrack}</p>
-                </div>
-              )}
               {record.cost !== null && (
                 <div>
                   <p className="text-[11px] text-[#555] uppercase tracking-wider mb-1">Paid</p>
@@ -96,6 +94,8 @@ export default async function RecordDetailPage({ params }: { params: { id: strin
           </div>
         </div>
       </div>
+
+      <Tracklist tracks={record.tracks ?? []} />
     </div>
   );
 }

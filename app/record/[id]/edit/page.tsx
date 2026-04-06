@@ -23,7 +23,6 @@ export default async function EditRecordPage({ params }: { params: { id: string 
           genre: record.genre,
           artworkUrl: record.artworkUrl,
           starRating: record.starRating,
-          favouriteTrack: record.favouriteTrack,
           cost: record.cost,
           notes: record.notes,
         }}

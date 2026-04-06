@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import StarRating from "./StarRating";
 import DiscogsSearch, { AutofillFields } from "./DiscogsSearch";
+import { TrackInput } from "@/lib/types";
 
 interface RecordFormProps {
   mode: "record" | "wishlist";
@@ -27,11 +28,11 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
     genre: (initialData?.genre as string) || "",
     artworkUrl: (initialData?.artworkUrl as string) || "",
     starRating: (initialData?.starRating as number) || 3,
-    favouriteTrack: (initialData?.favouriteTrack as string) || "",
     cost: mode === "record" ? String(initialData?.cost ?? "") : "",
     targetPrice: mode === "wishlist" ? String(initialData?.targetPrice ?? "") : "",
     notes: (initialData?.notes as string) || "",
   });
+  const [tracklist, setTracklist] = useState<TrackInput[]>([]);
 
   const [artworkPreview, setArtworkPreview] = useState((initialData?.artworkUrl as string) || "");
   const [loading, setLoading] = useState(false);
@@ -53,6 +54,7 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
       artworkUrl: fields.artworkUrl || f.artworkUrl,
     }));
     if (fields.artworkUrl) setArtworkPreview(fields.artworkUrl);
+    if (fields.tracklist) setTracklist(fields.tracklist);
   };
 
   const handleScrollToFields = () => {
@@ -77,6 +79,7 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
       starRating: mode === "record" ? form.starRating : undefined,
       cost: mode === "record" && form.cost ? Number(form.cost) : undefined,
       targetPrice: mode === "wishlist" && form.targetPrice ? Number(form.targetPrice) : undefined,
+      tracklist: !isEdit && tracklist.length > 0 ? tracklist : undefined,
     };
 
     try {
@@ -112,6 +115,35 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
 
       {!isEdit && (
         <DiscogsSearch onAutofill={handleAutofill} onScrollToFields={handleScrollToFields} />
+      )}
+
+      {!isEdit && tracklist.length > 0 && (
+        <div className="bg-[#111111] border border-[#1f1f1f] rounded-xl px-4 py-3">
+          <div className="flex items-center justify-between mb-2.5">
+            <p className="text-[11px] text-[#555] uppercase tracking-wider">Tracklist</p>
+            <span className="bg-emerald-950/60 border border-emerald-900/50 text-emerald-400 text-[11px] rounded-full px-2.5 py-0.5 font-medium">
+              {tracklist.length} track{tracklist.length !== 1 ? "s" : ""} imported
+            </span>
+          </div>
+          <div className="space-y-0.5 max-h-48 overflow-y-auto">
+            {tracklist.map((t, i) => (
+              <div key={i} className="flex items-center gap-2.5 py-0.5">
+                {t.position && (
+                  <span
+                    className="shrink-0 text-[11px] text-[#555] font-mono text-center rounded px-1 py-0.5 leading-tight"
+                    style={{ background: "rgba(255,255,255,0.05)", minWidth: "36px" }}
+                  >
+                    {t.position}
+                  </span>
+                )}
+                <span className="flex-1 min-w-0 text-[13px] text-[#888] truncate">{t.title}</span>
+                {t.duration && (
+                  <span className="shrink-0 text-[12px] text-[#555] tabular-nums">{t.duration}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       <div ref={fieldsRef} className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -165,16 +197,6 @@ export default function RecordForm({ mode, initialData, recordId }: RecordFormPr
                 ))}
               </select>
             </div>
-          </div>
-
-          <div>
-            <label className={labelClass}>Favourite Track</label>
-            <input
-              value={form.favouriteTrack}
-              onChange={(e) => setForm((f) => ({ ...f, favouriteTrack: e.target.value }))}
-              className={inputClass}
-              placeholder="e.g. Come Together"
-            />
           </div>
 
           <div>

@@ -8,17 +8,28 @@ datasource db {
 }
 
 model Record {
-  id             Int      @id @default(autoincrement())
-  artist         String
-  album          String
-  year           Int?
-  genre          String?
-  artworkUrl     String?
-  starRating     Int      @default(3)
-  favouriteTrack String?
-  cost           Float?
-  notes          String?
-  createdAt      DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  artist     String
+  album      String
+  year       Int?
+  genre      String?
+  artworkUrl String?
+  starRating Int      @default(3)
+  cost       Float?
+  notes      String?
+  createdAt  DateTime @default(now())
+  tracks     Track[]
+}
+
+model Track {
+  id          String   @id @default(cuid())
+  recordId    Int
+  record      Record   @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  position    String
+  title       String
+  duration    String?
+  isFavourite Boolean  @default(false)
+  order       Int
 }
 
 model WatchedRelease {
@@ -31,15 +42,15 @@ model WatchedRelease {
 }
 
 model WishlistItem {
-  id             Int      @id @default(autoincrement())
-  artist         String
-  album          String
-  year           Int?
-  genre          String?
-  artworkUrl     String?
-  starRating     Int      @default(3)
-  favouriteTrack String?
-  targetPrice    Float?
-  notes          String?
-  createdAt      DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  artist      String
+  album       String
+  year        Int?
+  genre       String?
+  artworkUrl  String?
+  starRating  Int      @default(3)
+  targetPrice Float?
+  notes       String?
+  tracklist   String?
+  createdAt   DateTime @default(now())
 }

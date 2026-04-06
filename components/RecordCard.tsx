@@ -44,7 +44,18 @@ export default function RecordCard({ record, onDelete }: RecordCardProps) {
           <div className="px-3 pt-2.5 pb-3">
             <p className="text-[#888888] text-[13px] truncate leading-tight">{record.artist}</p>
             <p className="text-[#ededed] text-[15px] font-medium truncate mt-0.5 leading-tight">{record.album}</p>
-            <div className="flex items-center justify-between mt-2.5">
+            {(() => {
+              const favCount = record.tracks?.filter((t) => t.isFavourite).length ?? 0;
+              return (
+                <div className={`flex items-center gap-1 mt-2 mb-0.5 ${favCount === 0 ? "invisible" : ""}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#f97316" style={{ filter: "drop-shadow(0 0 4px rgba(249,115,22,0.5))" }}>
+                    <path d="M12 2c-2.5 5.5-5 8-5 11a5 5 0 0010 0c0-3-2.5-5.5-5-11zm0 14.5A2.5 2.5 0 019.5 14c0-1.3.8-2.5 2.5-4.5 1.7 2 2.5 3.2 2.5 4.5A2.5 2.5 0 0112 16.5z" />
+                  </svg>
+                  <span className="text-[11px] text-[#f97316]">{favCount}</span>
+                </div>
+              );
+            })()}
+          <div className="flex items-center justify-between mt-2.5">
               <StarRating value={record.starRating} readonly size="sm" />
               <button
                 onClick={(e) => {

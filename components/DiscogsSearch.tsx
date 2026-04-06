@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { TrackInput } from "@/lib/types";
 
 interface SearchResult {
   id: number;
@@ -10,12 +11,15 @@ interface SearchResult {
   thumb?: string;
 }
 
+export type { TrackInput };
+
 export interface AutofillFields {
   artist: string;
   album: string;
   year: string;
   genre: string;
   artworkUrl: string;
+  tracklist?: TrackInput[];
 }
 
 interface DiscogsSearchProps {
@@ -138,12 +142,24 @@ export default function DiscogsSearch({ onAutofill, onScrollToFields }: DiscogsS
         release.images?.[0];
       const artworkUrl: string = primaryImage?.uri ?? "";
 
+      const rawTracklist: Array<{ position: string; title: string; duration?: string; type_?: string }> =
+        release.tracklist ?? [];
+      const tracklist: TrackInput[] = rawTracklist
+        .filter((t) => t.type_ === "track" || !t.type_)
+        .map((t, i) => ({
+          position: t.position ?? "",
+          title: t.title,
+          duration: t.duration || undefined,
+          order: i,
+        }));
+
       onAutofill({
         artist,
         album: release.title ?? "",
         year: release.year ? String(release.year) : "",
         genre: mapGenre(release.genres, release.styles),
         artworkUrl,
+        tracklist: tracklist.length > 0 ? tracklist : undefined,
       });
 
       setSuccess(true);

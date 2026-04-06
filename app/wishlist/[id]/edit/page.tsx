@@ -23,7 +23,6 @@ export default async function EditWishlistPage({ params }: { params: { id: strin
           genre: item.genre,
           artworkUrl: item.artworkUrl,
           starRating: item.starRating,
-          favouriteTrack: item.favouriteTrack,
           targetPrice: item.targetPrice,
           notes: item.notes,
         }}

@@ -29,9 +29,9 @@ export default function WishlistCard({ item, onDelete }: WishlistCardProps) {
           year: item.year,
           genre: item.genre,
           artworkUrl: item.artworkUrl,
-          favouriteTrack: item.favouriteTrack,
           notes: item.notes,
           cost: cost ? Number(cost) : null,
+          tracklist: item.tracklist ?? undefined,
         }),
       });
       await fetch(`/api/wishlist/${item.id}`, { method: "DELETE" });

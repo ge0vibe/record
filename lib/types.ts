@@ -1,3 +1,20 @@
+export interface TrackInput {
+  position: string;
+  title: string;
+  duration?: string;
+  order: number;
+}
+
+export interface Track {
+  id: string;
+  recordId: number;
+  position: string;
+  title: string;
+  duration: string | null;
+  isFavourite: boolean;
+  order: number;
+}
+
 export interface Record {
   id: number;
   artist: string;
@@ -6,10 +23,10 @@ export interface Record {
   genre: string | null;
   artworkUrl: string | null;
   starRating: number;
-  favouriteTrack: string | null;
   cost: number | null;
   notes: string | null;
   createdAt: string;
+  tracks?: Track[];
 }
 
 export interface WishlistItem {
@@ -20,8 +37,8 @@ export interface WishlistItem {
   genre: string | null;
   artworkUrl: string | null;
   starRating: number;
-  favouriteTrack: string | null;
   targetPrice: number | null;
   notes: string | null;
+  tracklist: TrackInput[] | null;
   createdAt: string;
 }
